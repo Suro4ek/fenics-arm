@@ -73,9 +73,9 @@ RUN apt-get -y install python3 fenics build-essential
 # install all python dependencies
 RUN apt-get -y install \
                    python3-pip \
-                   python3-vedo \ 
+                #    python3-vedo \ 
                    python3-scipy \
-                   python3-torch \
+                #    python3-torch \
                    python3-matplotlib
 
 # RUN apt-get install libgl1-mesa-dev libgl1-mesa-glx xvfb -y --no-install-recommends \
