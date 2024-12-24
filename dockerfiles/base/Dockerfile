@@ -1,5 +1,13 @@
-FROM ubuntu:lunar
+FROM ubuntu:focal
 
+# RUN echo "deb http://old-releases.ubuntu.com/ubuntu/ lunar-updates main universe multiverse" > /etc/apt/sources.list && \
+#     echo "deb http://old-releases.ubuntu.com/ubuntu/ lunar main universe multiverse" >> /etc/apt/sources.list
+
+# RUN apt-get update && \
+#     apt-get install -y software-properties-common gnupg curl && \
+#     add-apt-repository "deb http://dev.ubuntu.com/ubuntu focal universe"
+    # apt-get dist-upgrade -y
+ARG DEBIAN_FRONTEND=noninteractive
 # Get Ubuntu updates
 USER root
 RUN apt-get update && \
@@ -61,9 +69,7 @@ WORKDIR /tmp
 # apt-get clean && \
 # rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apt-get -y install \
-                python3 \
-                fenics
+RUN apt-get -y install python3 fenics build-essential
 # install all python dependencies
 RUN apt-get -y install \
                    python3-pip \
@@ -72,15 +78,15 @@ RUN apt-get -y install \
                    python3-torch \
                    python3-matplotlib
 
-RUN apt-get install libgl1-mesa-dev libgl1-mesa-glx xvfb -y --no-install-recommends \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false 
+# RUN apt-get install libgl1-mesa-dev libgl1-mesa-glx xvfb -y --no-install-recommends \
+#   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false 
 
 RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 USER root
-COPY set_xvfb.sh /home/fenics/
-RUN chmod 777 /home/fenics/set_xvfb.sh
+# COPY set_xvfb.sh /home/fenics/
+# RUN chmod 777 /home/fenics/set_xvfb.sh
 COPY pip.conf /home/fenics/.config/pip/
 USER fenics
 ENV FENICS_HOME /home/fenics
@@ -94,6 +100,6 @@ COPY WELCOME $FENICS_HOME/WELCOME
 WORKDIR /home/fenics
 USER fenics
 
-RUN /home/fenics/set_xvfb.sh
+# RUN /home/fenics/set_xvfb.sh
 ENTRYPOINT ["/bin/bash","-l","-c"]
 CMD ["/bin/bash","-i"]
